@@ -1,94 +1,134 @@
 {
-  "name": "TuitionMate - Booking Follow Up",
-  "nodes": [
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "4295097e-e355-49f9-b2a3-f8a4a3633d64",
-              "name": "customer",
-              "value": "={{ $json.body.parent_name }}",
-              "type": "string"
-            },
-            {
-              "id": "f326c829-e49e-441c-b23c-a6fc0d6e8bef",
-              "name": "email",
-              "value": "={{ $json.body.contact_email }}",
-              "type": "string"
-            },
-            {
-              "id": "9e413103-9076-45f5-87cd-9705626784ac",
-              "name": "subject",
-              "value": "={{ $json.body.subject }}",
-              "type": "string"
-            },
-            {
-              "id": "cff064d3-dbf2-4d6b-8d3c-e22778ea6fe6",
-              "name": "preferred_day",
-              "value": "={{ $json.body.preferred_day }}",
-              "type": "string"
-            },
-            {
-              "id": "e77fe70b-d2e8-4ed8-8ffb-aa51f0fb71c4",
-              "name": "task_status",
-              "value": "pending_staff_review",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.5,
-      "position": [
-        224,
-        0
-      ],
-      "id": "3e604cab-14fd-4502-a457-7a55f95aae70",
-      "name": "Edit Fields"
-    },
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "tuitionmate-booking",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.2,
-      "position": [
-        0,
-        0
-      ],
-      "id": "fc1c3c29-6ab9-41eb-b576-81cd6f0eb220",
-      "name": "Webhook",
-      "webhookId": "d92ee2c7-d38a-4c2a-ba03-274a6b852e4f"
-    }
-  ],
-  "pinData": {},
-  "connections": {
-    "Webhook": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "active": true,
-  "settings": {
-    "executionOrder": "v1",
-    "binaryMode": "separate"
-  },
-  "versionId": "194f2b5d-7f08-4d42-9c00-8c9965c239a1",
-  "meta": {
-    "instanceId": "1df674bbcd6faa2c31804207ba94005fa2f8e5728182b62bf50aea8236aac53f"
-  },
-  "nodeGroups": [],
-  "id": "ncxZNDb4XgBXGVhg",
-  "tags": []
+    "name":  "TuitionMate - Booking Follow Up",
+    "nodes":  [
+                  {
+                      "parameters":  {
+                                         "assignments":  {
+                                                             "assignments":  [
+                                                                                 {
+                                                                                     "id":  "4295097e-e355-49f9-b2a3-f8a4a3633d64",
+                                                                                     "name":  "customer",
+                                                                                     "value":  "={{ $json.body.parent_name }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "f326c829-e49e-441c-b23c-a6fc0d6e8bef",
+                                                                                     "name":  "email",
+                                                                                     "value":  "={{ $json.body.contact_email }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "9e413103-9076-45f5-87cd-9705626784ac",
+                                                                                     "name":  "subject",
+                                                                                     "value":  "={{ $json.body.subject }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "cff064d3-dbf2-4d6b-8d3c-e22778ea6fe6",
+                                                                                     "name":  "preferred_day",
+                                                                                     "value":  "={{ $json.body.preferred_day }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "e77fe70b-d2e8-4ed8-8ffb-aa51f0fb71c4",
+                                                                                     "name":  "task_status",
+                                                                                     "value":  "pending_staff_review",
+                                                                                     "type":  "string"
+                                                                                 }
+                                                                             ]
+                                                         },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.set",
+                      "typeVersion":  3.5,
+                      "position":  [
+                                       224,
+                                       0
+                                   ],
+                      "id":  "3e604cab-14fd-4502-a457-7a55f95aae70",
+                      "name":  "Edit Fields"
+                  },
+                  {
+                      "parameters":  {
+                                         "httpMethod":  "POST",
+                                         "path":  "tuitionmate-booking",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.webhook",
+                      "typeVersion":  2.2,
+                      "position":  [
+                                       0,
+                                       0
+                                   ],
+                      "id":  "fc1c3c29-6ab9-41eb-b576-81cd6f0eb220",
+                      "name":  "Webhook",
+                      "webhookId":  "d92ee2c7-d38a-4c2a-ba03-274a6b852e4f"
+                  },
+                  {
+                      "parameters":  {
+                                         "chatId":  "YOUR_TELEGRAM_CHAT_ID",
+                                         "text":  "=\n馃摡 New TuitionMate Booking\n\n馃懁 Customer: {{ $json.customer }}\n馃摟 Email: {{ $json.email }}\n馃摎 Subject: {{ $json.subject }}\n馃搮 Preferred Day: {{ $json.preferred_day }}\n馃搵 Status: {{ $json.task_status }}\n\n鈿狅笍 Staff review required.\nBooking is NOT confirmed.\n",
+                                         "additionalFields":  {
+
+                                                              }
+                                     },
+                      "type":  "n8n-nodes-base.telegram",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       448,
+                                       0
+                                   ],
+                      "id":  "f4bd1134-a9b7-465a-87e7-966f34683665",
+                      "name":  "Send a text message",
+                      "webhookId":  "88a61bfb-6e80-408a-aea3-09683ed24e39"
+                  }
+              ],
+    "pinData":  {
+
+                },
+    "connections":  {
+                        "Webhook":  {
+                                        "main":  [
+                                                     [
+                                                         {
+                                                             "node":  "Edit Fields",
+                                                             "type":  "main",
+                                                             "index":  0
+                                                         }
+                                                     ]
+                                                 ]
+                                    },
+                        "Edit Fields":  {
+                                            "main":  [
+                                                         [
+                                                             {
+                                                                 "node":  "Send a text message",
+                                                                 "type":  "main",
+                                                                 "index":  0
+                                                             }
+                                                         ]
+                                                     ]
+                                        }
+                    },
+    "active":  true,
+    "settings":  {
+                     "executionOrder":  "v1",
+                     "binaryMode":  "separate"
+                 },
+    "versionId":  "08b940ba-8745-46f6-b194-b8ea44e60590",
+    "meta":  {
+                 "templateCredsSetupCompleted":  true,
+                 "instanceId":  "1df674bbcd6faa2c31804207ba94005fa2f8e5728182b62bf50aea8236aac53f"
+             },
+    "nodeGroups":  [
+
+                   ],
+    "id":  "ncxZNDb4XgBXGVhg",
+    "tags":  [
+
+             ]
 }
