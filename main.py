@@ -9,9 +9,8 @@ from urllib.request import Request, urlopen
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 from pathlib import Path
-from openai import OpenAI
-from threading import Lock
 import json
+from urllib.error import URLError, HTTPError
 import os
 import re
 
@@ -252,12 +251,44 @@ def create_booking_request(data: BookingRequest):
                 writer.writeheader()
 
             writer.writerow(record)
+    notification_sent = notify_n8n(record)
 
     return {
         "success": True,
         "status": "request_received",
+        "notification_sent": notification_sent,
         "message": (
             "Your demo booking request has been recorded. "
             "The schedule is not confirmed."
         )
     }
+
+
+# Day 7 - Local n8n webhook
+N8N_WEBHOOK_URL = (
+    "http://127.0.0.1:5678/webhook/tuitionmate-booking"
+)
+
+
+def notify_n8n(record):
+    payload = json.dumps(record).encode("utf-8")
+
+    request = Request(
+        N8N_WEBHOOK_URL,
+        data=payload,
+        headers={"Content-Type": "application/json"},
+        method="POST"
+    )
+
+    try:
+        with urlopen(request, timeout=3) as response:
+            if not 200 <= response.status < 300:
+                return False
+
+        print("N8N WEBHOOK: SUCCESS")
+        return True
+
+    except (HTTPError, URLError, TimeoutError, OSError) as error:
+        print("N8N WEBHOOK FAILED:", type(error).__name__)
+        return False
+
