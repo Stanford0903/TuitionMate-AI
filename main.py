@@ -291,4 +291,3 @@ def notify_n8n(record):
     except (HTTPError, URLError, TimeoutError, OSError) as error:
         print("N8N WEBHOOK FAILED:", type(error).__name__)
         return False
-
