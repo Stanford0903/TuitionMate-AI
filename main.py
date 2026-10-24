@@ -1,3 +1,9 @@
+import csv
+from datetime import datetime, timezone
+from threading import Lock
+from typing import Literal
+from fastapi import HTTPException
+
 from test_ollama import ask_local_ai
 from urllib.request import Request, urlopen
 from fastapi import FastAPI
@@ -137,4 +143,121 @@ def inquiry(data: Inquiry):
         "customer": data.name,
         "faq_id": None,
         "reply": HANDOFF_MESSAGE
+    }
+
+
+# =====================================
+# Day 6 - Booking Request API
+# =====================================
+
+BOOKING_FILE = Path(__file__).parent / "data" / "leads_demo.csv"
+booking_lock = Lock()
+
+BOOKING_FIELDS = [
+    "created_at",
+    "parent_name",
+    "contact_email",
+    "subject",
+    "preferred_day",
+    "status"
+]
+
+
+class BookingRequest(BaseModel):
+    parent_name: str = Field(min_length=1, max_length=80)
+
+    contact_email: str = Field(
+        min_length=5,
+        max_length=120,
+        pattern=r"^[^\s@]+@[^\s@]+\.[^\s@]+$"
+    )
+
+    subject: Literal["Maths", "Science", "English"]
+
+    preferred_day: Literal[
+        "Monday", "Tuesday", "Wednesday",
+        "Thursday", "Friday", "Saturday", "Sunday"
+    ]
+
+    consent_to_contact: bool
+
+
+def safe_csv_value(value):
+    # Prevent spreadsheet formula execution.
+    text = str(value).strip()
+    if text.startswith(("=", "+", "-", "@")):
+        return "'" + text
+    return text
+
+
+@app.post("/booking-request")
+def create_booking_request(data: BookingRequest):
+
+    name = data.parent_name.strip()
+    email = data.contact_email.strip().lower()
+
+    if not name or not data.consent_to_contact:
+        raise HTTPException(
+            status_code=422,
+            detail="Valid name and consent are required."
+        )
+
+    with booking_lock:
+        BOOKING_FILE.parent.mkdir(
+            parents=True,
+            exist_ok=True
+        )
+
+        existing = []
+
+        if BOOKING_FILE.exists():
+            with BOOKING_FILE.open(
+                "r", encoding="utf-8", newline=""
+            ) as file:
+                existing = list(csv.DictReader(file))
+
+        # Check duplicate requests.
+        for row in existing:
+            if (
+                row["contact_email"] == email
+                and row["subject"] == data.subject
+                and row["preferred_day"] == data.preferred_day
+            ):
+                return {
+                    "status": "duplicate",
+                    "message": "This demo request already exists."
+                }
+
+        record = {
+            "created_at": datetime.now(
+                timezone.utc
+            ).isoformat(),
+            "parent_name": safe_csv_value(name),
+            "contact_email": email,
+            "subject": data.subject,
+            "preferred_day": data.preferred_day,
+            "status": "pending_staff_review"
+        }
+
+        file_exists = BOOKING_FILE.exists()
+
+        with BOOKING_FILE.open(
+            "a", encoding="utf-8", newline=""
+        ) as file:
+            writer = csv.DictWriter(
+                file, fieldnames=BOOKING_FIELDS
+            )
+
+            if not file_exists:
+                writer.writeheader()
+
+            writer.writerow(record)
+
+    return {
+        "success": True,
+        "status": "request_received",
+        "message": (
+            "Your demo booking request has been recorded. "
+            "The schedule is not confirmed."
+        )
     }
