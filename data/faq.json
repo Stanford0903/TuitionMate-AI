@@ -1,0 +1,123 @@
+
+[
+  {
+    "id": "FAQ001",
+    "category": "courses",
+    "question": "What subjects do you offer?",
+    "answer": "Our demo centre offers Maths, Science and English."
+  },
+  {
+    "id": "FAQ002",
+    "category": "schedule",
+    "question": "Are there weekend classes?",
+    "answer": "Weekend classes are available. Please contact our team to confirm the timetable."
+  },
+  {
+    "id": "FAQ003",
+    "category": "fees",
+    "question": "How much are the fees?",
+    "answer": "Our team will confirm the latest fees before registration."
+  },
+  {
+    "id": "FAQ004",
+    "category": "registration",
+    "question": "How can I register?",
+    "answer": "Please contact our registration team to begin the process."
+  },
+  {
+    "id": "FAQ005",
+    "category": "location",
+    "question": "Where is the demo centre located?",
+    "answer": "The demo centre is located at 123 Learning Lane, Education City."
+  },
+  {
+    "id": "FAQ006",
+    "category": "contact",
+    "question": "How can I contact the demo centre?",
+    "answer": "You can reach us at (123) 456-7890 or email us at info@democentre.com"
+  },
+  {
+    "id": "FAQ007",
+    "category": "materials",
+    "question": "Do you provide study materials?",
+    "answer": "Yes, we provide all necessary study materials for our courses."
+  },
+  {
+    "id": "FAQ008",
+    "category": "certification",
+    "question": "Do you offer certification upon course completion?",
+    "answer": "Yes, we provide certificates for all completed courses."
+  },
+  {
+  "id": "FAQ009",
+  "category": "refunds",
+  "question": "What is your refund policy?",
+  "answer": "Please contact our staff to confirm the current refund policy before making any payment."
+  },
+  {
+    "id": "FAQ010",
+    "category": "online",
+    "question": "Do you offer online classes?",
+    "answer": "Yes, we offer online classes for selected courses. Please check our website for more details."
+  },
+  {
+    "id": "FAQ011",
+    "category": "age",
+    "question": "What is the age requirement for enrollment?",
+    "answer": "Students must be at least 5 years old to enroll in our courses."
+  },
+  {
+    "id": "FAQ012",
+    "category": "trial",
+    "question": "Do you offer trial classes?",
+    "answer": "Yes, we offer trial classes for new students. Please contact us to schedule a trial session."
+  },
+  {
+    "id": "FAQ013",
+    "category": "payment",
+    "question": "What payment methods do you accept?",
+    "answer": "We accept credit/debit cards, bank transfers, and online payment platforms."
+  },
+  {
+    "id": "FAQ014",
+    "category": "discounts",
+    "question": "Are there any discounts available?",
+    "answer": "Yes, we offer discounts for early registration and for siblings. Please contact our team for more information."
+  },
+  {
+    "id": "FAQ015",
+    "category": "support",
+    "question": "How can I get support if I have questions?",
+    "answer": "You can reach our support team via phone, email, or through our website's contact form."
+  },
+  {
+    "id": "FAQ016",
+    "category": "attendance",
+    "question": "What is the attendance policy?",
+    "answer": "Students are expected to attend all scheduled classes. If a student misses a class, they should inform the instructor and arrange for make-up sessions if necessary."
+  },
+  {
+    "id": "FAQ017",
+    "category": "materials",
+    "question": "Are textbooks provided or do I need to purchase them?",
+    "answer": "Textbooks are provided as part of the course materials. There is no need to purchase them separately."
+  },
+  {
+    "id": "FAQ018",
+    "category": "progress",
+    "question": "How is student progress assessed?",
+    "answer": "Student progress is assessed through regular quizzes, assignments, and periodic exams. Feedback is provided to help students improve."
+  },
+  {
+    "id": "FAQ019",
+    "category": "extra-curricular",
+    "question": "Do you offer any extra-curricular activities?",
+    "answer": "Yes, we offer a variety of extra-curricular activities including clubs, workshops, and special events. Please check our website for the current schedule."
+  },
+  {
+    "id": "FAQ020",
+    "category": "safety",
+    "question": "What safety measures are in place at the demo centre?",
+    "answer": "We have strict safety protocols including regular sanitization, emergency procedures, and trained staff to ensure a safe learning environment."
+  }
+]

@@ -1,0 +1,11 @@
+test_id,question,expected,actual,expected_faq_id,actual_faq_id,result
+TC01,What subjects do you offer?,answered,answered,FAQ001,FAQ001,PASS
+TC02,Are there weekend classes?,answered,answered,FAQ002,FAQ002,PASS
+TC03,How much are the fees?,answered,answered,FAQ003,FAQ003,PASS
+TC04,How can I register?,answered,answered,FAQ004,FAQ004,PASS
+TC05,Do you teach mathematics?,handoff,handoff,,,PASS
+TC06,Can you provide ADHD support?,handoff,handoff,,,PASS
+TC07,Do you offer school bus transport?,handoff,handoff,,,PASS
+TC08,Can I get a refund?,handoff,handoff,,,PASS
+TC09,Where is your tuition centre?,handoff,handoff,,,PASS
+TC10,Can I get a 50% discount?,handoff,handoff,,,PASS
