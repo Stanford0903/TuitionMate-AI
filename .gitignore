@@ -21,3 +21,4 @@ logs/
 
 # Local demo lead records
 data/leads_demo.csv
+data/leads_demo.backup.csv
