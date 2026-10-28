@@ -1,3 +1,7 @@
+import secrets
+from fastapi import Header
+
+from uuid import uuid4
 import csv
 from datetime import datetime, timezone
 from threading import Lock
@@ -153,6 +157,7 @@ BOOKING_FILE = Path(__file__).parent / "data" / "leads_demo.csv"
 booking_lock = Lock()
 
 BOOKING_FIELDS = [
+    "booking_id",
     "created_at",
     "parent_name",
     "contact_email",
@@ -160,6 +165,19 @@ BOOKING_FIELDS = [
     "preferred_day",
     "status"
 ]
+# Day 9 - Staff booking status tracking
+
+STAFF_API_KEY = os.getenv("TUITIONMATE_STAFF_API_KEY")
+
+ALLOWED_STATUS_TRANSITIONS = {
+    "pending_staff_review": {"contacted"},
+    "contacted": {"completed"},
+    "completed": set()
+}
+
+
+class BookingStatusUpdate(BaseModel):
+    status: Literal["contacted", "completed"]
 
 
 class BookingRequest(BaseModel):
@@ -228,6 +246,7 @@ def create_booking_request(data: BookingRequest):
                 }
 
         record = {
+            "booking_id": "BK-" + uuid4().hex[:12].upper(),
             "created_at": datetime.now(
                 timezone.utc
             ).isoformat(),
@@ -255,6 +274,7 @@ def create_booking_request(data: BookingRequest):
 
     return {
         "success": True,
+        "booking_id": record["booking_id"],
         "status": "request_received",
         "notification_sent": notification_sent,
         "message": (
@@ -291,3 +311,112 @@ def notify_n8n(record):
     except (HTTPError, URLError, TimeoutError, OSError) as error:
         print("N8N WEBHOOK FAILED:", type(error).__name__)
         return False
+
+
+@app.patch("/bookings/{booking_id}/status")
+def update_booking_status(
+    booking_id: str,
+    data: BookingStatusUpdate,
+    x_staff_api_key: str | None = Header(default=None)
+):
+    # Require staff authentication.
+    if (
+        not STAFF_API_KEY
+        or not x_staff_api_key
+        or not secrets.compare_digest(
+            x_staff_api_key,
+            STAFF_API_KEY
+        )
+    ):
+        raise HTTPException(
+            status_code=401,
+            detail="Unauthorized staff request."
+        )
+
+    with booking_lock:
+        if not BOOKING_FILE.exists():
+            raise HTTPException(
+                status_code=404,
+                detail="Booking not found."
+            )
+
+        with BOOKING_FILE.open(
+            "r", encoding="utf-8-sig", newline=""
+        ) as file:
+            reader = csv.DictReader(file)
+            fields = reader.fieldnames
+            rows = list(reader)
+
+        if fields != BOOKING_FIELDS:
+            raise HTTPException(
+                status_code=500,
+                detail="Booking CSV schema mismatch."
+            )
+
+        target = next(
+            (
+                row for row in rows
+                if row["booking_id"] == booking_id
+            ),
+            None
+        )
+
+        if target is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Booking not found."
+            )
+
+        old_status = target["status"]
+        new_status = data.status
+
+        if new_status == old_status:
+            return {
+                "booking_id": booking_id,
+                "status": old_status,
+                "changed": False,
+                "message": "Status already up to date."
+            }
+
+        allowed = ALLOWED_STATUS_TRANSITIONS.get(
+            old_status, set()
+        )
+
+        if new_status not in allowed:
+            raise HTTPException(
+                status_code=409,
+                detail=(
+                    f"Invalid status transition: "
+                    f"{old_status} -> {new_status}"
+                )
+            )
+
+        target["status"] = new_status
+
+        # Write to a temporary file first.
+        temp_path = BOOKING_FILE.with_suffix(".tmp")
+
+        try:
+            with temp_path.open(
+                "w", encoding="utf-8", newline=""
+            ) as file:
+                writer = csv.DictWriter(
+                    file,
+                    fieldnames=BOOKING_FIELDS
+                )
+                writer.writeheader()
+                writer.writerows(rows)
+
+            os.replace(temp_path, BOOKING_FILE)
+
+        finally:
+            if temp_path.exists():
+                temp_path.unlink()
+
+    return {
+        "booking_id": booking_id,
+        "previous_status": old_status,
+        "status": new_status,
+        "changed": True,
+        "message": "Staff follow-up status updated."
+    }
